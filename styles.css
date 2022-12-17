@@ -95,12 +95,6 @@ body {
   width: 100vw;
   height: 100vh;
 }
-/* 
-div {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-} */
 
 /* Gameboard */
 .gameBoard {
@@ -118,20 +112,21 @@ div {
   width: 300px;
   height: 300px;
   border: 1px black solid;
-}
-
-.counter {
-  width: 300px;
-  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10em;
+  font-size: 10rem;
 }
+
 /* PlayerScores */
 .playerContainer {
   grid-column: 1/2;
   grid-row: 2/3;
+}
+
+.playerContainer > div > h1,
+.playerContainer > div > div {
+  font-size: 2rem;
 }
 
 /* ButtonContainer */
