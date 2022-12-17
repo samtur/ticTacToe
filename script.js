@@ -1,3 +1,7 @@
+// Query Selectors
+const newGameBtn = document.querySelector("#newGame");
+
+// Factory Functions and Modules
 const gameBoard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
   return { board };
@@ -15,3 +19,8 @@ const player = (name) => {
   let playerScore = 0;
   return { playerName, playerScore };
 };
+
+// Event Listeners
+newGameBtn.addEventListener("click", (e) => {
+  console.log("Got me!");
+});
