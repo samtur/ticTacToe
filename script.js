@@ -1,5 +1,6 @@
 // Query Selectors
 const newGameBtn = document.querySelector("#newGame");
+const boardSquares = document.querySelectorAll(".boardSq");
 
 // Factory Functions and Modules
 const gameBoard = (() => {
@@ -13,7 +14,38 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
+  let checkWin = (board) => {
+    // WRITE LOGIC TO CHECK ALL WINNING POSSIBLITIES
+    // END GAME WHEN WINNER CHECK IF IT IS PLAYER ONE OR PLAYER TWO
+    // DISPLAY CONGRAULATIONS MESSAGE
+    // UP PLAYERS SCORE
+    // REMOVE ALL EVENT LISTENERS FROM BOARD
+    // ASK IF PLAYER WOULD LIKE ANOTHER ROUND
+    // IF YES RUN NEWGAME FUNCTION AGAIN
+    // ADD OPTION FOR PLAYERS TO UPDATE NAME
+    if (board[0] === "X" && board[1] === "X" && board[2] === "X") {
+      console.log("Player One wins");
+    }
+    return;
+  };
+
   let newGame = (playerOne, playerTwo) => {
+    boardSquares.forEach((box) => {
+      box.addEventListener("click", (e) => {
+        if (playerOne.turn === true) {
+          box.textContent = "X";
+          gameBoard.board[box.dataset.index] = "X";
+          playerOne.turn = false;
+          playerTwo.turn = true;
+        } else {
+          box.textContent = "O";
+          gameBoard.board[box.dataset.index] = "O";
+          playerOne.turn = true;
+          playerTwo.turn = false;
+        }
+        checkWin(gameBoard.board);
+      });
+    });
     document.querySelector(
       "#player1Name"
     ).textContent = `${playerOne.playerName}`;
@@ -28,25 +60,12 @@ const gameController = (() => {
     ).textContent = `${playerTwo.playerScore}`;
     playerOne.turn = true;
     playerTwo.turn = false;
-    checkTurn(playerOne, playerTwo);
   };
-  let checkTurn = (playerOne, playerTwo) => {
-    if (playerOne.turn) {
-      document.querySelectorAll(".boardSq").forEach((box) => {
-        box.addEventListener("click", (e) => {
-          box.textContent = "X";
-          console.log(gameBoard.board);
-          // NEED TO UPDATE GAMEBOARD ARRAY!
-          // SWITCH TURN FLAGS
-          // CHECK FOR TURN AGAIN
-          // REPEAT UNTIL WINNING CONDITION MET
-          // MAKE FUNCTION TO CHECK FOR WIN!
-        });
-      });
-    }
+
+  let restartGame = () => {
+    // WRITE LOGIC FOR RESTART BTN
   };
-  let restartGame = () => {};
-  return { newGame, checkTurn, restartGame };
+  return { newGame, restartGame, checkWin };
 })();
 
 const player = (name, score, counter) => {
