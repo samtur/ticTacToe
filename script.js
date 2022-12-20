@@ -48,7 +48,7 @@ const gameController = (() => {
       check7.every(allX) ||
       check8.every(allX)
     ) {
-      console.log("player one winner");
+      document.querySelector("#winMsg").textContent = "Player One Wins!";
       return;
     } else if (
       check1.every(allO) ||
@@ -60,7 +60,7 @@ const gameController = (() => {
       check7.every(allO) ||
       check8.every(allO)
     ) {
-      console.log("player two winner");
+      document.querySelector("#winMsg").textContent = "Player Two Wins!";
       return;
     }
     return;
