@@ -2,7 +2,7 @@
 const newGameBtn = document.querySelector("#newGame");
 const boardSquares = document.querySelectorAll(".boardSq");
 
-// Factory Functions and Modules
+// Gameboard Module
 const gameBoard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
   const displayBoard = () => {
@@ -14,15 +14,55 @@ const gameBoard = (() => {
   return { board, displayBoard, clearBoard };
 })();
 
+// Player Factory
+const player = (name, score, counter) => {
+  let playerName = name;
+  let playerScore = score;
+  let turn = true;
+  let icon = counter;
+  return { playerName, playerScore, turn, icon };
+};
+
+// Game Controller Module
 const gameController = (() => {
-  let checkWin = (board) => {
+  let newGame = (playerOne, playerTwo) => {
+    const tracker = function tracker() {
+      if (playerOne.turn === true) {
+        this.textContent = "X";
+        gameBoard.board[this.dataset.index] = "X";
+        playerOne.turn = false;
+        playerTwo.turn = true;
+      } else {
+        this.textContent = "O";
+        gameBoard.board[this.dataset.index] = "O";
+        playerOne.turn = true;
+        playerTwo.turn = false;
+      }
+      checkWin(gameBoard.board, tracker);
+    };
+    boardSquares.forEach((box) => box.addEventListener("click", tracker));
+    document.querySelector(
+      "#player1Name"
+    ).textContent = `${playerOne.playerName}`;
+    document.querySelector(
+      "#player1Score"
+    ).textContent = `${playerOne.playerScore}`;
+    document.querySelector(
+      "#player2Name"
+    ).textContent = `${playerTwo.playerName}`;
+    document.querySelector(
+      "#player2Score"
+    ).textContent = `${playerTwo.playerScore}`;
+    playerOne.turn = true;
+    playerTwo.turn = false;
+    return playerOne, playerTwo;
+  };
+
+  let checkWin = (board, track) => {
     const allX = (currentValue) => currentValue === "X";
     const allO = (currentValue) => currentValue === "O";
     // END GAME WHEN WINNER CHECK IF IT IS PLAYER ONE OR PLAYER TWO
-    // DISPLAY CONGRAULATIONS MESSAGE
-    // USE A DIV TO HOLD MESSAGE AT THE BOTTOM
     // UP PLAYERS SCORE
-    // REMOVE ALL EVENT LISTENERS FROM BOARD
     // REMOVE WINNER MESSAGE
     // ASK IF PLAYER WOULD LIKE ANOTHER ROUND
     // IF YES RUN NEWGAME FUNCTION AGAIN
@@ -30,6 +70,7 @@ const gameController = (() => {
     // ADD OPTION FOR PLAYERS TO UPDATE NAME
     // ADD RESTART BUTTON AND FUNCTION WHICH RESTARTS CURRENT GAME
     // LET NEW GAME BTN WIPE BOARD AND SCORES ON PRESS.
+    // ADD NEW EVENT LISTENERS
     let check1 = [0, 1, 2].map((x) => board[x]);
     let check2 = [3, 4, 5].map((x) => board[x]);
     let check3 = [6, 7, 8].map((x) => board[x]);
@@ -49,6 +90,7 @@ const gameController = (() => {
       check8.every(allX)
     ) {
       document.querySelector("#winMsg").textContent = "Player One Wins!";
+      boardSquares.forEach((box) => box.removeEventListener("click", track));
       return;
     } else if (
       check1.every(allO) ||
@@ -61,42 +103,10 @@ const gameController = (() => {
       check8.every(allO)
     ) {
       document.querySelector("#winMsg").textContent = "Player Two Wins!";
+      boardSquares.forEach((box) => box.removeEventListener("click", track));
       return;
     }
     return;
-  };
-
-  let newGame = (playerOne, playerTwo) => {
-    boardSquares.forEach((box) => {
-      box.addEventListener("click", (e) => {
-        if (playerOne.turn === true) {
-          box.textContent = "X";
-          gameBoard.board[box.dataset.index] = "X";
-          playerOne.turn = false;
-          playerTwo.turn = true;
-        } else {
-          box.textContent = "O";
-          gameBoard.board[box.dataset.index] = "O";
-          playerOne.turn = true;
-          playerTwo.turn = false;
-        }
-        checkWin(gameBoard.board);
-      });
-    });
-    document.querySelector(
-      "#player1Name"
-    ).textContent = `${playerOne.playerName}`;
-    document.querySelector(
-      "#player1Score"
-    ).textContent = `${playerOne.playerScore}`;
-    document.querySelector(
-      "#player2Name"
-    ).textContent = `${playerTwo.playerName}`;
-    document.querySelector(
-      "#player2Score"
-    ).textContent = `${playerTwo.playerScore}`;
-    playerOne.turn = true;
-    playerTwo.turn = false;
   };
 
   let restartGame = () => {
@@ -104,14 +114,6 @@ const gameController = (() => {
   };
   return { newGame, restartGame, checkWin };
 })();
-
-const player = (name, score, counter) => {
-  let playerName = name;
-  let playerScore = score;
-  let turn = true;
-  let icon = counter;
-  return { playerName, playerScore, turn, icon };
-};
 
 // Event Listeners
 newGameBtn.addEventListener("click", (e) => {
