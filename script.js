@@ -10,7 +10,12 @@ const gameBoard = (() => {
       document.querySelector(`#sq${i}`).textContent = `${board[i]}`;
     }
   };
-  const clearBoard = () => {};
+  const clearBoard = () => {
+    for (i in board) {
+      board[i] = "";
+      document.querySelector(`#sq${i}`).textContent = `${board[i]}`;
+    }
+  };
   return { board, displayBoard, clearBoard };
 })();
 
@@ -22,6 +27,9 @@ const player = (name, score, counter) => {
   let icon = counter;
   return { playerName, playerScore, turn, icon };
 };
+
+const playerOne = player("Player One", 0, "X");
+const playerTwo = player("Player Two", 0, "O");
 
 // Game Controller Module
 const gameController = (() => {
@@ -38,7 +46,7 @@ const gameController = (() => {
         playerOne.turn = true;
         playerTwo.turn = false;
       }
-      checkWin(gameBoard.board, tracker);
+      checkWin(gameBoard.board, tracker, playerOne, playerTwo);
     };
     boardSquares.forEach((box) => box.addEventListener("click", tracker));
     document.querySelector(
@@ -58,19 +66,10 @@ const gameController = (() => {
     return playerOne, playerTwo;
   };
 
-  let checkWin = (board, track) => {
+  let checkWin = (board, track, playerOne, playerTwo) => {
     const allX = (currentValue) => currentValue === "X";
     const allO = (currentValue) => currentValue === "O";
-    // END GAME WHEN WINNER CHECK IF IT IS PLAYER ONE OR PLAYER TWO
-    // UP PLAYERS SCORE
-    // REMOVE WINNER MESSAGE
-    // ASK IF PLAYER WOULD LIKE ANOTHER ROUND
-    // IF YES RUN NEWGAME FUNCTION AGAIN
-    // IF NO CURRENT A FUNCTION TO CLEAR EVERYTHING, BOARD AND SCORES
-    // ADD OPTION FOR PLAYERS TO UPDATE NAME
-    // ADD RESTART BUTTON AND FUNCTION WHICH RESTARTS CURRENT GAME
-    // LET NEW GAME BTN WIPE BOARD AND SCORES ON PRESS.
-    // ADD NEW EVENT LISTENERS
+    const draw = (currentValue) => currentValue !== "";
     let check1 = [0, 1, 2].map((x) => board[x]);
     let check2 = [3, 4, 5].map((x) => board[x]);
     let check3 = [6, 7, 8].map((x) => board[x]);
@@ -89,8 +88,14 @@ const gameController = (() => {
       check7.every(allX) ||
       check8.every(allX)
     ) {
-      document.querySelector("#winMsg").textContent = "Player One Wins!";
+      document.querySelector("#winMsg").textContent =
+        "Player One Wins! Would you like to play again?";
+      document.querySelector(".winBtn").classList.remove("hidden");
       boardSquares.forEach((box) => box.removeEventListener("click", track));
+      playerOne.playerScore += 1;
+      document.querySelector(
+        "#player1Score"
+      ).textContent = `${playerOne.playerScore}`;
       return;
     } else if (
       check1.every(allO) ||
@@ -102,22 +107,80 @@ const gameController = (() => {
       check7.every(allO) ||
       check8.every(allO)
     ) {
-      document.querySelector("#winMsg").textContent = "Player Two Wins!";
+      document.querySelector("#winMsg").textContent =
+        "Player Two Wins! Would you like to play again?";
+      document.querySelector(".winBtn").classList.remove("hidden");
       boardSquares.forEach((box) => box.removeEventListener("click", track));
+      playerTwo.playerScore += 1;
+      document.querySelector(
+        "#player2Score"
+      ).textContent = `${playerTwo.playerScore}`;
+      return;
+    } else if (check1.every(draw) && check2.every(draw) && check3.every(draw)) {
+      document.querySelector("#winMsg").textContent =
+        "It's a draw! Would you like to play again?";
+      document.querySelector(".winBtn").classList.remove("hidden");
+      boardSquares.forEach((box) => box.removeEventListener("click", track));
+      playerOne.playerScore += 1;
+      playerTwo.playerScore += 1;
+      document.querySelector(
+        "#player1Score"
+      ).textContent = `${playerOne.playerScore}`;
+      document.querySelector(
+        "#player2Score"
+      ).textContent = `${playerTwo.playerScore}`;
       return;
     }
     return;
   };
 
-  let restartGame = () => {
-    // WRITE LOGIC FOR RESTART BTN
-  };
-  return { newGame, restartGame, checkWin };
+  return { newGame, checkWin };
 })();
 
 // Event Listeners
-newGameBtn.addEventListener("click", (e) => {
-  const playerOne = player("Player One", 0, "X");
-  const playerTwo = player("Player Two", 0, "O");
+newGameBtn.addEventListener("click", () => {
+  document.querySelector("#restartGame").classList.remove("hidden");
+  gameBoard.clearBoard();
+  document.querySelector("#winMsg").textContent = "";
+  playerOne.playerScore = 0;
+  playerTwo.playerScore = 0;
+  document.querySelector(
+    "#player1Score"
+  ).textContent = `${playerOne.playerScore}`;
+  document.querySelector(
+    "#player2Score"
+  ).textContent = `${playerTwo.playerScore}`;
   gameController.newGame(playerOne, playerTwo);
 });
+
+document.querySelector("#playYes").addEventListener("click", () => {
+  document.querySelector(".winBtn").classList.add("hidden");
+  document.querySelector("#winMsg").textContent = "";
+  gameBoard.clearBoard();
+  gameController.newGame(playerOne, playerTwo);
+});
+
+document.querySelector("#playNo").addEventListener("click", () => {
+  document.querySelector(".winBtn").classList.add("hidden");
+  document.querySelector("#restartGame").classList.add("hidden");
+  gameBoard.clearBoard();
+  document.querySelector("#winMsg").textContent = "";
+  playerOne.playerScore = 0;
+  playerTwo.playerScore = 0;
+  document.querySelector(
+    "#player1Score"
+  ).textContent = `${playerOne.playerScore}`;
+  document.querySelector(
+    "#player2Score"
+  ).textContent = `${playerTwo.playerScore}`;
+});
+
+document.querySelector("#restartGame").addEventListener("click", () => {
+  gameBoard.clearBoard();
+});
+
+// To do
+// TIDY CODE
+// STYLE CSS
+// ADD FUNCTIONALITY TO CHANGE NAME JS
+// ADD VS COMPUTER AI PLAY

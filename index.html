@@ -11,11 +11,11 @@
   <body>
     <div class="playerContainer">
       <div class="player1">
-        <h1 id="player1Name">Sam</h1>
+        <h1 id="player1Name"></h1>
         <div class="score" id="player1Score"></div>
       </div>
       <div class="player2">
-        <h1 id="player2Name">Qian</h1>
+        <h1 id="player2Name"></h1>
         <div class="score" id="player2Score"></div>
       </div>
     </div>
@@ -30,10 +30,18 @@
       <div class="boardSq" id="sq7" data-index="7"></div>
       <div class="boardSq" id="sq8" data-index="8"></div>
     </div>
-    <div class="winnerMsg"><h1 id="winMsg"></h1></div>
+    <div class="winnerMsg">
+      <h1 id="winMsg"></h1>
+      <div class="winBtn hidden">
+        <button type="button" id="playYes">Yes</button>
+        <button type="button" id="playNo">No</button>
+      </div>
+    </div>
     <div class="buttonContainer">
       <button type="button" id="newGame">New Game</button>
-      <button type="button" id="restartGame">Restart</button>
+      <button type="button" class="hidden" id="restartGame">
+        Restart Round
+      </button>
     </div>
   </body>
 </html>
