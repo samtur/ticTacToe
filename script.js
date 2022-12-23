@@ -31,6 +31,17 @@ const player = (name, score, counter) => {
 const playerOne = player("Player One", 0, "X");
 const playerTwo = player("Player Two", 0, "O");
 
+document.querySelector("#player1Name").textContent = `${playerOne.playerName}`;
+document.querySelector(
+  "#player1Score"
+).textContent = `${playerOne.playerScore}`;
+document.querySelector("#player2Name").textContent = `${playerTwo.playerName}`;
+document.querySelector(
+  "#player2Score"
+).textContent = `${playerTwo.playerScore}`;
+playerOne.turn = true;
+playerTwo.turn = false;
+
 // Game Controller Module
 const gameController = (() => {
   let newGame = (playerOne, playerTwo) => {
@@ -49,20 +60,7 @@ const gameController = (() => {
       checkWin(gameBoard.board, tracker, playerOne, playerTwo);
     };
     boardSquares.forEach((box) => box.addEventListener("click", tracker));
-    document.querySelector(
-      "#player1Name"
-    ).textContent = `${playerOne.playerName}`;
-    document.querySelector(
-      "#player1Score"
-    ).textContent = `${playerOne.playerScore}`;
-    document.querySelector(
-      "#player2Name"
-    ).textContent = `${playerTwo.playerName}`;
-    document.querySelector(
-      "#player2Score"
-    ).textContent = `${playerTwo.playerScore}`;
-    playerOne.turn = true;
-    playerTwo.turn = false;
+
     return playerOne, playerTwo;
   };
 
@@ -140,6 +138,9 @@ const gameController = (() => {
 // Event Listeners
 newGameBtn.addEventListener("click", () => {
   document.querySelector("#restartGame").classList.remove("hidden");
+  document.querySelector(".playerContainer").classList.remove("hidden");
+  document.querySelector("#newGame").classList.add("hidden");
+  boardSquares.forEach((box) => box.classList.add("sq"));
   gameBoard.clearBoard();
   document.querySelector("#winMsg").textContent = "";
   playerOne.playerScore = 0;
@@ -163,6 +164,8 @@ document.querySelector("#playYes").addEventListener("click", () => {
 document.querySelector("#playNo").addEventListener("click", () => {
   document.querySelector(".winBtn").classList.add("hidden");
   document.querySelector("#restartGame").classList.add("hidden");
+  document.querySelector("#newGame").classList.remove("hidden");
+  boardSquares.forEach((box) => box.classList.remove("sq"));
   gameBoard.clearBoard();
   document.querySelector("#winMsg").textContent = "";
   playerOne.playerScore = 0;
