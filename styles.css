@@ -112,6 +112,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-self: end;
+  gap: 2rem;
 }
 
 /* Gameboard */
@@ -210,4 +211,9 @@ button:hover::after {
 
 button:active {
   top: 2px;
+}
+
+#newGame,
+#restartGame {
+  width: 15rem;
 }
