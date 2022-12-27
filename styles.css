@@ -148,7 +148,7 @@ body {
 /* Winner Msg */
 .winnerMsg {
   width: 45rem;
-  height: 5rem;
+  height: fit-content;
   grid-column: 2/3;
   grid-row: 3/4;
   justify-self: center;
@@ -157,15 +157,33 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 2rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.winBtn {
+  display: flex;
+  gap: 2rem;
+}
+
+.winBtn > button {
+  width: 10rem;
 }
 
 .hidden {
   display: none;
 }
 
-.playerContainer > div > h1,
+.playerContainer > div > input,
 .playerContainer > div > div {
   font-size: 2rem;
+}
+
+.playerContainer > div > input {
+  background: transparent;
+  border: none;
+  color: var(--txt-color);
+  max-width: 20rem;
 }
 
 /* Buttons */
