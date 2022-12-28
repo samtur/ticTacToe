@@ -17,18 +17,13 @@ const playNo = document.querySelector("#playNo");
 // Gameboard Module
 const gameBoard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
-  const displayBoard = () => {
-    for (i in board) {
-      document.querySelector(`#sq${i}`).textContent = `${board[i]}`;
-    }
-  };
   const clearBoard = () => {
     for (i in board) {
       board[i] = "";
       document.querySelector(`#sq${i}`).textContent = `${board[i]}`;
     }
   };
-  return { board, displayBoard, clearBoard };
+  return { board, clearBoard };
 })();
 
 // Player Factory
@@ -132,6 +127,27 @@ const gameController = (() => {
     }
   };
 
+  let pveGame = (playerOne, playerTwo) => {
+    const tracker = function tracker() {
+      this.textContent = "X";
+      gameBoard.board[this.dataset.index] = "X";
+      this.removeEventListener("click", tracker);
+      checkWinPve1(gameBoard.board, tracker, playerOne, playerTwo);
+    };
+    boardSquares.forEach((box) => box.addEventListener("click", tracker));
+  };
+
+  let pveturn2 = (track, board) => {
+    let random = Math.floor(Math.random() * 9);
+    while (gameBoard.board[random] !== "") {
+      random = Math.floor(Math.random() * 9);
+    }
+    gameBoard.board[random] = "O";
+    document.querySelector(`#sq${random}`).textContent = "O";
+    document.querySelector(`#sq${random}`).removeEventListener("click", track);
+    checkWinPve2(gameBoard.board, track, playerOne, playerTwo);
+  };
+
   let checkWinPve1 = (board, track, playerOne, playerTwo) => {
     const allX = (currentValue) => currentValue === "X";
     const draw = (currentValue) => currentValue !== "";
@@ -173,7 +189,7 @@ const gameController = (() => {
       player2Score.textContent = `${playerTwo.playerScore}`;
       return;
     } else {
-      gameController.pveturn2(track);
+      gameController.pveturn2(track, board);
     }
   };
 
@@ -218,28 +234,6 @@ const gameController = (() => {
       player2Score.textContent = `${playerTwo.playerScore}`;
       return;
     }
-  };
-
-  let pveGame = (playerOne, playerTwo) => {
-    const tracker = function tracker() {
-      this.textContent = "X";
-      gameBoard.board[this.dataset.index] = "X";
-      this.removeEventListener("click", tracker);
-      checkWinPve1(gameBoard.board, tracker, playerOne, playerTwo);
-    };
-    boardSquares.forEach((box) => box.addEventListener("click", tracker));
-  };
-
-  let pveturn2 = function play2(track) {
-    console.log(track);
-    let random = Math.floor(Math.random() * 9);
-    while (gameBoard.board[random] !== "") {
-      random = Math.floor(Math.random() * 9);
-    }
-    gameBoard.board[random] = "O";
-    document.querySelector(`#sq${random}`).textContent = "O";
-    document.querySelector(`#sq${random}`).removeEventListener("click", track);
-    checkWinPve2(gameBoard.board, track, playerOne, playerTwo);
   };
 
   return { newGame, checkWin, pveGame, pveturn2 };
@@ -327,6 +321,5 @@ player2Name.addEventListener(
 );
 
 // To do
-// TIDY CODE
 // FINISH STYLING
 // CONSIDER MAKING SMARTER AI
